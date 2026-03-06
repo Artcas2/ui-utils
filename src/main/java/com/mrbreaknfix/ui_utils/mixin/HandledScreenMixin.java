@@ -22,7 +22,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.mrbreaknfix.ui_utils.UiUtils.*;
+import static com.mrbreaknfix.ui_utils.UiUtils.mc;
+import static com.mrbreaknfix.ui_utils.UiUtils.overlay;
+import static com.mrbreaknfix.ui_utils.UiUtils.slotManager;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin {
@@ -75,13 +77,14 @@ public abstract class HandledScreenMixin {
     }
 
     @Inject(method = "drawSlot", at = @At("RETURN"))
-    private void onDrawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
+    private void onDrawSlot(
+            DrawContext context, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
         ScreenCommandSlotManager.drawHighlightOnSlot(context, slot);
         ScreenCommandSlotManager.drawSlotId(context, slot);
     }
 
     @Inject(method = "drawSlot", at = @At("RETURN"))
-    private void drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
+    private void drawSlot(DrawContext context, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
         if (slot.id == slotManager.getHighlightedSlotID()
                 && slotManager.shouldRenderHighlightedSlot()) {
             slotManager.drawHighlightedOnSlot(context, slot);
